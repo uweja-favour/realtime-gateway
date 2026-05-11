@@ -9,39 +9,17 @@ import org.springframework.web.reactive.handler.SimpleUrlHandlerMapping
 import org.springframework.web.reactive.socket.server.support.WebSocketHandlerAdapter
 import realtime_gateway.infrastructure.messaging.websocket.handler.UserWebSocketHandler
 
-//@Configuration
-//class WebSocketConfig(
-//    private val handler: UserWebSocketHandler
-//) {
-//
-//    @Bean
-//    fun webSocketHandlerMapping(): HandlerMapping {
-//        val map = mapOf(
-//            "/api/v1/ws/realtime" to handler,
-//        )
-//        // the url -> ws://10.0.2.2:8084/api/v1/ws/realtime?token=JWT
-//
-//        return SimpleUrlHandlerMapping(map).apply {
-//            order = -1
-//        }
-//    }
-//
-//    @Bean
-//    fun handlerAdapter(): WebSocketHandlerAdapter =
-//        WebSocketHandlerAdapter()
-//}
-
 @Configuration
-@EnableWebFlux
 class WebSocketConfig(
     private val handler: UserWebSocketHandler
 ) {
 
     @Bean
-    fun handlerMapping(): HandlerMapping {
+    fun webSocketHandlerMapping(): HandlerMapping {
         val map = mapOf(
-            "/api/v1/ws/realtime" to handler
+            "/api/v1/ws/realtime" to handler,
         )
+        // the url -> ws://10.0.2.2:8084/api/v1/ws/realtime?token=JWT
 
         return SimpleUrlHandlerMapping(map).apply {
             order = -1
@@ -49,5 +27,6 @@ class WebSocketConfig(
     }
 
     @Bean
-    fun webSocketHandlerAdapter() = WebSocketHandlerAdapter()
+    fun handlerAdapter(): WebSocketHandlerAdapter =
+        WebSocketHandlerAdapter()
 }

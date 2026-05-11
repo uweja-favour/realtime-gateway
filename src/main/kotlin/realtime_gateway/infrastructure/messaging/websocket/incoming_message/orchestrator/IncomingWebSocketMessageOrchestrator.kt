@@ -17,7 +17,7 @@ class IncomingWebSocketMessageOrchestrator(
     private val processorMap: Map<KClass<out ClientWebSocketMessage>, ClientWebSocketMessageProcessor<*>> =
         processors.associateBy { it.supports() }
 
-    private val logger = LoggerFactory.getLogger(javaClass)
+    private val log = LoggerFactory.getLogger(javaClass)
 
     @Suppress("UNCHECKED_CAST")
     fun dispatch(userId: String, messageJson: String): Mono<Void> {
@@ -26,14 +26,14 @@ class IncomingWebSocketMessageOrchestrator(
             val processor = processorMap[message::class]
 
             if (processor == null) {
-                logger.warn("No processor found for message type: ${message::class.simpleName}")
+                log.warn("No processor found for message type: ${message::class.simpleName}")
                 return Mono.empty()
             }
 
             (processor as ClientWebSocketMessageProcessor<ClientWebSocketMessage>)
                 .process(userId, message)
         } catch (ex: Exception) {
-            logger.error("Error processing message $messageJson", ex)
+            log.error("Error processing message $messageJson", ex)
             Mono.empty()
         }
     }

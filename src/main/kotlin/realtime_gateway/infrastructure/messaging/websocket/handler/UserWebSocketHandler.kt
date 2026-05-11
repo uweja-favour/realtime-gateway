@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.reactor.asFlux
-import kotlinx.serialization.json.Json
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.socket.WebSocketHandler
@@ -29,9 +28,11 @@ class UserWebSocketHandler(
     private val tokenExtractor: WebSocketTokenExtractor,
 ) : WebSocketHandler {
 
-    private val logger = LoggerFactory.getLogger(javaClass)
+    private val log = LoggerFactory.getLogger(javaClass)
 
     override fun handle(session: WebSocketSession): Mono<Void> {
+        log.info("Received session ${session.id}")
+
         return authenticate(session)
             .flatMap { userId ->
 
@@ -47,9 +48,9 @@ class UserWebSocketHandler(
 
                 val outbound = session.send(
                     channel.consumeAsFlow()
-                        .catch { e -> logger.error("Error during send", e) }
+                        .catch { e -> log.error("Error during send", e) }
                         .map {
-                            logger.info("The channel consumed: $it")
+                            log.info("The channel consumed: $it")
                             session.textMessage(it)
                         }
                         .asFlux()

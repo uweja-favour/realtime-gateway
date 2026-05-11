@@ -1,5 +1,6 @@
 package realtime_gateway.infrastructure.security
 
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -23,6 +24,8 @@ class SecurityConfig(
     private val authEnabled: Boolean
 ) {
 
+    private val log = LoggerFactory.getLogger(javaClass)
+
     @Bean
     fun securityWebFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain {
         return http
@@ -30,7 +33,9 @@ class SecurityConfig(
             .cors { it.configurationSource(corsConfigurationSource()) }
 
             .exceptionHandling {
+
                 it.authenticationEntryPoint { exchange, ex ->
+                    log.error("Unexpected exception in ${javaClass.simpleName} occurred", ex)
                     jwtAuthEntryPoint.commence(exchange, ex)
                 }
             }
@@ -43,6 +48,7 @@ class SecurityConfig(
                 it.pathMatchers("/api/v1/ws/**").permitAll()
                 it.anyExchange().authenticated()
 
+                log.info("Authenticated...")
 //                if (!authEnabled) {
 //                    it.anyExchange().permitAll()
 //                } else {
