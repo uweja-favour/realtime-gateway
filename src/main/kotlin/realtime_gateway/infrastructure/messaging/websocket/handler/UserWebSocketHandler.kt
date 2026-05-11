@@ -27,7 +27,6 @@ class UserWebSocketHandler(
     private val authManager: JwtReactiveAuthenticationManager,
     private val incomingWebSocketMessageOrchestrator: IncomingWebSocketMessageOrchestrator,
     private val tokenExtractor: WebSocketTokenExtractor,
-    private val json: Json
 ) : WebSocketHandler {
 
     private val logger = LoggerFactory.getLogger(javaClass)

@@ -14,7 +14,7 @@ class JwtDecoderConfig {
 
     @Bean
     fun reactiveJwtDecoder(
-        @Value("\${security.jwt.accessSecret}") accessSecret: String
+        @Value("\${jwt.accessSecret}") accessSecret: String
     ): ReactiveJwtDecoder {
         require(!accessSecret.isNullOrBlank()) {
             "security.jwt.accessSecret must be configured"
