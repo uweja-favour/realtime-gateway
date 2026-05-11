@@ -1,0 +1,113 @@
+# =========================================================
+# DEVELOPMENT-ONLY CONFIGURATION
+# Overrides application.yml when profile = dev
+# =========================================================
+
+# -------------------------------------------------------
+# FILE STORAGE
+# -------------------------------------------------------
+file_manager:
+  storage_dir: C:/dev/backend/storage/self_test_quiz_service_storage
+
+# -------------------------------------------------------
+# SPRING CONFIGURATION (DEV OVERRIDES)
+# -------------------------------------------------------
+spring:
+
+  # Enable virtual threads (Java 21 feature)
+  threads:
+    virtual:
+      enabled: true
+
+  # -----------------------------------------------------
+  # DATABASE CONFIG (R2DBC + JDBC)
+  # -----------------------------------------------------
+  r2dbc:
+    url: r2dbc:mysql://localhost:3306/realtime_gateway_dev_db?serverTimezone=UTC
+    username: root
+    password: Sentry_Password
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/question_generation_dev_db?serverTimezone=UTC
+    username: root
+    password: Sentry_Password
+    hikari:
+      maximum-pool-size: 30
+      minimum-idle: 10
+      idle-timeout: 30000
+      max-lifetime: 600000
+      connection-timeout: 30000
+
+  transaction:
+    default-timeout: 30s
+
+  # -----------------------------------------------------
+  # LOGGING (SQL DEBUGGING ENABLED)
+  # -----------------------------------------------------
+  logging:
+    level:
+      org.hibernate.SQL: debug
+      org.hibernate.orm.jdbc.bind: trace
+
+  # -----------------------------------------------------
+  # WEBFLUX + MEMORY SETTINGS
+  # -----------------------------------------------------
+  codec:
+    max-in-memory-size: 500MB
+
+  webflux:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 500MB
+
+  # -----------------------------------------------------
+  # JACKSON (JSON SERIALIZATION CONFIG)
+  # -----------------------------------------------------
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    deserialization:
+      read-date-timestamps-as-nanoseconds: true
+    time-zone: UTC
+
+# -------------------------------------------------------
+# RABBITMQ (NOT USED FOR KAFKA FLOW BUT KEPT)
+# -------------------------------------------------------
+rabbitmq:
+  host: localhost
+  port: 5678
+  username: guest
+  password: guest
+
+# -------------------------------------------------------
+# RESILIENCE4J CONFIG (AI TIMEOUT)
+# -------------------------------------------------------
+resilience4j:
+  timelimiter:
+    instances:
+      aiOrchestrator:
+        timeout-duration: 1800s
+        cancel-running-future: false
+
+# -------------------------------------------------------
+# SERVER CONFIG
+# -------------------------------------------------------
+server:
+  port: ${PORT:8084}
+
+# -------------------------------------------------------
+# STORAGE (S3)
+# -------------------------------------------------------
+s3:
+  bucket-name: your-bucket-her
+
+security:
+  auth:
+    enabled: true
+
+  jwt:
+    accessSecret: asdfsdfarwegrsKLSAHAKBIUUIBuseweDOIy8b_)@#r43243234sadfew23fsxcasdfq32refwasegsade234ew
+    access-token:
+      expiration-ms: 900000
+    refresh-token:
+      expiration-ms: 2592000000

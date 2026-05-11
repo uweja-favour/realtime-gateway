@@ -1,0 +1,57 @@
+# =========================================================
+# BASE APPLICATION CONFIGURATION (SHARED ACROSS ALL PROFILES)
+# =========================================================
+
+spring:
+  profiles:
+    active: dev # Default profile (can override via -Dspring.profiles.active)
+
+  application:
+    name: realtime-gateway
+
+  main:
+    allow-bean-definition-overriding: false
+
+  # -------------------------------------------------------
+  # KAFKA CONFIGURATION (SHARED)
+  # This is where Spring Boot EXPECTS Kafka config
+  # -------------------------------------------------------
+  kafka:
+#    bootstrap-servers: localhost:9092
+    bootstrap-servers: pkc-41wq6.eu-west-2.aws.confluent.cloud:9092
+    properties:
+      security.protocol: SASL_SSL
+      sasl.mechanism: PLAIN
+
+      sasl.jaas.config: >
+        org.apache.kafka.common.security.plain.PlainLoginModule required
+        username="45RFFUY3K4VIJ676"
+        password="cfltYWjWkOpVGkR1tTKIyOMyDTRP3UfWX3o9rQUm+BwqRsf05UlrVzgGsRvYiwIg";
+
+
+    # Consumer config → used when receiving messages
+    consumer:
+      group-id: realtime-gateway  # REQUIRED for Kafka listeners
+#      auto-offset-reset: earliest WARNING, SHOULD BE REMOVED!!!
+
+      # JSON deserialization config
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"  # Allow all packages (dev-safe, restrict in prod)
+
+    # Producer config → used when sending messages
+    producer:
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+    # If offsets are ever missing, start from “now”, not from the beginning
+    # That means do not replay messages from the beginning.
+    consumer.auto-offset-reset: latest
+
+# -------------------------------------------------------
+# MANAGEMENT / ACTUATOR CONFIG
+# -------------------------------------------------------
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,loggers
