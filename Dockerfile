@@ -7,7 +7,7 @@ WORKDIR /app
 
 COPY . .
 
-./gradlew projects
+#./gradlew projects
 
 RUN chmod +x gradlew && ./gradlew bootJar --no-daemon
 
