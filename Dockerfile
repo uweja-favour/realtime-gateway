@@ -18,6 +18,6 @@ WORKDIR /app
 
 COPY --from=build /app/build/libs/*.jar app.jar
 
-EXPOSE 8080
+EXPOSE 8084
 
 ENTRYPOINT ["sh", "-c", "java -jar app.jar --server.port=8080 --spring.profiles.active=dev"]
