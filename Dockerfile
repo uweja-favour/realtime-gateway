@@ -7,8 +7,9 @@ WORKDIR /app
 
 COPY . .
 
-RUN chmod +x gradlew && ./gradlew :realtime-gateway:bootJar --no-daemon
+./gradlew projects/
 
+RUN chmod +x gradlew && ./gradlew bootJar --no-daemon
 
 # ─────────────────────────────────────────────
 # 2. RUNTIME STAGE
