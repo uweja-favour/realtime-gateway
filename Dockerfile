@@ -7,7 +7,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN ./gradlew :realtime-gateway:bootJar --no-daemon
+RUN chmod +x gradlew && ./gradlew :realtime-gateway:bootJar --no-daemon
 
 
 # ─────────────────────────────────────────────
