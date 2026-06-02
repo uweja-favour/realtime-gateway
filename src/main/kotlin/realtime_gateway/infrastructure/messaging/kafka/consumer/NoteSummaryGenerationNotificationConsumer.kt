@@ -27,9 +27,9 @@ class NoteSummaryGenerationNotificationConsumer(
         topics = [KafkaTopics.NoteSummary.NOTE_SUMMARY_PAYLOAD],
         containerFactory = KafkaBroadcastConsumerConfig.BROADCAST_KAFKA_LISTENER_CONTAINER_FACTORY
     )
-    fun handleSelfTestQuizGeneratedEvent(payload: ByteArray) {
+    fun handleNoteSummaryGeneratedEvent(payload: ByteArray) {
 
-        log.info("Received NoteSummaryDeliveredEvent: $payload")
+        log.info("Received NoteSummaryDeliveredEvent: ${payload.contentToString()}")
 
         val event = compressionService.decompress(
             NoteSummaryDeliveredEvent.serializer(),
